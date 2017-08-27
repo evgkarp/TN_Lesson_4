@@ -1,7 +1,5 @@
 class CargoTrain < Train
-  attr_reader :type
-
-  def initialize
-    type = :cargo    
+  def set_type
+    @type = :cargo    
   end
 end

@@ -8,6 +8,7 @@ require_relative 'cargo_wagon'
 
 
 class Main
+  attr_reader :stations, :trains, :routes
 
   def initialize
     @stations = []
@@ -41,26 +42,10 @@ class Main
           create_station
 
         when 2
-          puts "Введите тип поезда: 
-          1 - Пассажирский
-          2 - Грузовой"
-          type = gets.to_i
-          puts "Введите номер поезда: "
-          number = gets.to_i
-          if type == 1
-            create_passenger_train(number)
-          elsif type == 2
-            create_cargo_train(number)
-          else
-            puts "Введите 1 или 2"            
-          end
+          create_train
 
         when 3
-          puts "Введите начальную станцию: "
-          start = gets.chomp
-          puts "Введите конечную станцию: "
-          finish = gets.chomp
-          create_route(start, finish)
+          create_route
 
         when 4
           station = choise_station
@@ -72,14 +57,17 @@ class Main
           route = choise_route
           route.delete_station(station)
 
+#Когда выбираю 6 выходит ошибка "train.rb:22:in `route=': undefined method `take_train' for "nsk":String (NoMethodError)" 
+#nsk - это название первой станции в маршруте
+#остальные ошибки такого же плана
         when 6
           train = choise_train
           route = choise_route
-          train.route=(route) #почему этот метод не работает?
+          train.route=(route)
 
         when 7
           train = choise_train
-            if train.type == :passenger
+            if train.class == PassengerTrain
               wagon = create_passenger_wagon
             else
               wagon = create_cargo_wagon                   
@@ -103,7 +91,7 @@ class Main
           
         when 12
           station = choise_station
-          puts "#{station.trains}" #тоже не работает
+          puts station.trains #тоже не работает
           
         else
           puts "Введите число от 0 до 12"
@@ -123,26 +111,54 @@ private #В private поместил методы, к которым нет не
   def choise_station
     puts "Введите название станции"
     name = gets.chomp
-    @stations.each { |station| station if station.name == name }   
+    @stations.detect { |station| station if station.name == name } #select тоже возращает массив из одного элемента  
   end
 
-  def create_passenger_train(number)
+  def create_train
+    type = input_type_of_train
+    if type == 1
+      create_passenger_train
+    elsif type == 2
+      create_cargo_train
+    else
+      puts "Введите 1 или 2"            
+    end
+  end
+
+  def create_passenger_train
+    number = input_number_of_train
     train = PassengerTrain.new(number)
     @trains << train
   end
 
-  def create_cargo_train(number)
+  def create_cargo_train
+    number = input_number_of_train
     train = CargoTrain.new(number)
     @trains << train
   end
 
-  def choise_train
+  def input_number_of_train
     puts "Введите номер поезда: "
-    train_number = gets.to_i
-    @trains.each { |train| train if train.number == train_number } 
+    number = gets.to_i
   end
 
-  def create_route(start, finish)
+  def choise_train
+    number = input_number_of_train
+    @trains.detect { |train| train if train.number == number } 
+  end
+
+  def input_type_of_train
+    puts "Введите тип поезда: 
+    1 - Пассажирский
+    2 - Грузовой"
+    type = gets.to_i    
+  end
+
+  def create_route
+    puts "Введите начальную станцию: "
+    start = gets.chomp
+    puts "Введите конечную станцию: "
+    finish = gets.chomp
     route = Route.new(start, finish)
     @routes << route
   end
