@@ -1,5 +1,5 @@
 class PassengerTrain < Train
-  def set_type
+  def initialize(number)
     @type = :passenger    
   end
 end

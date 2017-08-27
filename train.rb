@@ -6,7 +6,6 @@ class Train
     @speed = 0
     @station_index = 0
     @wagons = []
-    set_type
   end
 
   def speed_up(n)

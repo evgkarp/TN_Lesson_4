@@ -13,7 +13,7 @@ class Main
   def initialize
     @stations = []
     @trains = []
-    @routes = []  
+    #@routes = []  
   end
 
   def start
@@ -57,13 +57,11 @@ class Main
           route = choise_route
           route.delete_station(station)
 
-#Когда выбираю 6 выходит ошибка "train.rb:22:in `route=': undefined method `take_train' for "nsk":String (NoMethodError)" 
-#nsk - это название первой станции в маршруте
-#остальные ошибки такого же плана
+#when 6 ошибка: main.rb:65:in `block in start': undefined method `route=' for nil:NilClass (NoMethodError)
+#По идее должен вызыватся метод из train.rb строка 19
         when 6
           train = choise_train
-          route = choise_route
-          train.route=(route)
+          train.route = @route
 
         when 7
           train = choise_train
@@ -91,7 +89,7 @@ class Main
           
         when 12
           station = choise_station
-          puts station.trains #тоже не работает
+          puts station.trains
           
         else
           puts "Введите число от 0 до 12"
@@ -111,7 +109,7 @@ private #В private поместил методы, к которым нет не
   def choise_station
     puts "Введите название станции"
     name = gets.chomp
-    @stations.detect { |station| station if station.name == name } #select тоже возращает массив из одного элемента  
+    @stations.detect { |station| station if station.name == name } 
   end
 
   def create_train
@@ -155,20 +153,20 @@ private #В private поместил методы, к которым нет не
   end
 
   def create_route
-    puts "Введите начальную станцию: "
-    start = gets.chomp
-    puts "Введите конечную станцию: "
-    finish = gets.chomp
-    route = Route.new(start, finish)
-    @routes << route
+    puts "Начальная станция: "
+    start = choise_station
+    puts "Конечная станция: "
+    finish = choise_station
+    @route = Route.new(start, finish)
+    #@routes << route
   end
-
+=begin
   def choise_route
     puts "Введите порядковый номер маршрута: "
     number = gets.to_i
     @routes[number - 1] 
   end
-
+=end
   def create_passenger_wagon
     wagon = PassengerWagon.new
   end

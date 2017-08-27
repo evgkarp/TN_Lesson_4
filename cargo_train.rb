@@ -1,5 +1,5 @@
 class CargoTrain < Train
-  def set_type
+  def initialize(number)
     @type = :cargo    
   end
 end
