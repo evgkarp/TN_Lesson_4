@@ -13,7 +13,7 @@ class Main
   def initialize
     @stations = []
     @trains = []
-    #@routes = []  
+    @routes = []  
   end
 
   def start
@@ -48,23 +48,22 @@ class Main
           create_route
 
         when 4
-          station = choise_station
-          route = choise_route
+          station = choose_station
+          route = choose_route
           route.add_station(station)
 
         when 5
-          station = choise_station
-          route = choise_route
+          station = choose_station
+          route = choose_route
           route.delete_station(station)
 
-#when 6 ошибка: main.rb:65:in `block in start': undefined method `route=' for nil:NilClass (NoMethodError)
-#По идее должен вызыватся метод из train.rb строка 19
         when 6
-          train = choise_train
-          train.route = @route
+          train = choose_train
+          route = choose_route
+          train.route = route
 
         when 7
-          train = choise_train
+          train = choose_train
             if train.class == PassengerTrain
               wagon = create_passenger_wagon
             else
@@ -73,22 +72,22 @@ class Main
           train.add_wagon(wagon)        
 
         when 8
-          train = choise_train
+          train = choose_train
           train.delete_wagon
 
         when 9
-          train = choise_train
+          train = choose_train
           train.go_forward
 
         when 10
-          train = choise_train
+          train = choose_train
           train.go_backward
           
         when 11
           @stations.each { |station| puts station.name }
           
         when 12
-          station = choise_station
+          station = choose_station
           puts station.trains
           
         else
@@ -106,10 +105,10 @@ private #В private поместил методы, к которым нет не
     @stations << station
   end
 
-  def choise_station
+  def choose_station
     puts "Введите название станции"
     name = gets.chomp
-    @stations.detect { |station| station if station.name == name } 
+    @stations.find { |station| station.name == name } 
   end
 
   def create_train
@@ -140,9 +139,9 @@ private #В private поместил методы, к которым нет не
     number = gets.to_i
   end
 
-  def choise_train
+  def choose_train
     number = input_number_of_train
-    @trains.detect { |train| train if train.number == number } 
+    @trains.find { |train| train.number == number } 
   end
 
   def input_type_of_train
@@ -154,19 +153,19 @@ private #В private поместил методы, к которым нет не
 
   def create_route
     puts "Начальная станция: "
-    start = choise_station
+    start = choose_station
     puts "Конечная станция: "
-    finish = choise_station
-    @route = Route.new(start, finish)
-    #@routes << route
+    finish = choose_station
+    route = Route.new(start, finish)
+    @routes << route
   end
-=begin
-  def choise_route
+
+  def choose_route
     puts "Введите порядковый номер маршрута: "
     number = gets.to_i
     @routes[number - 1] 
   end
-=end
+
   def create_passenger_wagon
     wagon = PassengerWagon.new
   end
